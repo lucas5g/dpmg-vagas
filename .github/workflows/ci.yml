@@ -9,7 +9,8 @@ on:
 jobs:
   gemini-analysis:
     runs-on: ubuntu-latest
-
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     permissions:
       contents: read
       pull-requests: write
@@ -29,8 +30,6 @@ jobs:
           git diff origin/${{ github.base_ref }} > diff.txt
 
       - name: Run Gemini Analysis
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           gemini analyze \
             --input diff.txt \
