@@ -1,0 +1,57 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  gemini-analysis:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Gemini CLI
+        run: |
+          curl -sSL https://raw.githubusercontent.com/google-gemini/gemini-cli/main/install.sh | bash
+
+      - name: Get diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git diff origin/${{ github.base_ref }} > diff.txt
+
+      - name: Run Gemini Analysis
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          gemini analyze \
+            --input diff.txt \
+            --prompt "
+            Você é um arquiteto backend sênior.
+            Analise o diff e classifique risco de breaking change:
+            LOW, MEDIUM ou HIGH.
+
+            Considere:
+            - Mudança de assinatura
+            - Remoção de métodos
+            - Alteração de DTO
+            - Mudança em schema
+            - Alteração em módulos críticos (auth, guards)
+
+            Responda em JSON:
+            { risk: '', reason: '', suggestions: '' }
+            " > result.json
+
+      - name: Fail if HIGH
+        run: |
+          if grep -q '"risk": "HIGH"' result.json; then
+            echo "High risk detected"
+            exit 1
+          fi
