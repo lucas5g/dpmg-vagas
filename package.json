@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"vitepress dev\"",
+    "dev": "concurrently \"vite\" \"vitepress dev\" \"bun run server\"",
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
-    "build": "tsc -b && vite build",
-    "postbuild": "npm run docs:build && cp -r .vitepress/dist dist/docs",
+    "build": "tsc -b && vite build && npm run docs:build && mkdir -p dist/docs && cp -r .vitepress/dist/* dist/docs/",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "bun run api/src/index.ts"
