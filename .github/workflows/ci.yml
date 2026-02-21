@@ -21,8 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Gemini CLI
-        run: |
-          curl -sSL https://raw.githubusercontent.com/google-gemini/gemini-cli/main/install.sh | bash
+        run: npx -g @google/gemini-cli
 
       - name: Get diff
         run: |
