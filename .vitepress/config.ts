@@ -29,9 +29,9 @@ export default defineConfig({
                 // text: 'Guias',
                 items: [
                     { text: 'Início', link: '/' },
-                    { text: 'Testes', link: '/TESTES' },
-                    { text: 'Conexão', link: '/CONEXAO' },
-                    { text: 'CI/CD', link: '/IACICD' }
+                    { text: 'Conexão via MCP, IDE e Figma', link: '/CONEXAO' },
+                    { text: 'Testes Automatizados por IA', link: '/TESTES' },
+                    { text: 'IA/CI/CD', link: '/IACICD' }
                 ]
             }
         ]

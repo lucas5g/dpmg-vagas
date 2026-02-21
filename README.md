@@ -1,13 +1,17 @@
-# Dpmg Vagas
+# Dpmg Vagas / Reunião
 
 <div align="justify">
 
-Quero resumir minhas ideias sobre a reunião de **Code Assist**. Senti falta de exemplos reais da equipe do Google e notei que foram expostos problemas no nosso fluxo que, a meu ver, já podem ser resolvidos com os recursos que possuímos. É apenas uma questão de ajuste. Para demonstrar isso, criei um projeto de **Cadastro de Vagas**.
+Criei este site (https://dpmg-vagas.vercel.app/) com o objetivo de ilustrar os pontos que julguei mais interessantes na reunião sobre o Google Code Assist.
+
+Aqui, decidi demonstrar exemplos práticos, pois acredito que assim teremos uma discussão mais rica na nossa próxima reunião. A ideia é avaliarmos como o Code Assist pode complementar ou facilitar configurações que já conseguimos realizar com os recursos atuais.
 
 ---
 
+Confira abaixo os exemplos práticos que preparei:
+
 - [Conexão via MCP, IDE e Figma](./docs/CONEXAO.md)
 - [Testes Automatizados por IA](./docs/TESTES.md)
-- [IACICD](./docs/IACICD.md)
+- [IA/CI/CD](./docs/IACICD.md)
 
 </div>
