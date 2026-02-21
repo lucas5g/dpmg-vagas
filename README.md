@@ -7,7 +7,7 @@ Quero resumir minhas ideias sobre a reunião de **Code Assist**. Senti falta de 
 ---
 
 - [Conexão via MCP, IDE e Figma](./docs/CONEXAO.md)
-- [Teste Automatizados por IA](./docs/TESTES.md)
+- [Testes Automatizados por IA](./docs/TESTES.md)
 - [IACICD](./docs/IACICD.md)
 
 </div>

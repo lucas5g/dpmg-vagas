@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "docs": "npx -y serve . -n -p 3333 -s docs.html",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
