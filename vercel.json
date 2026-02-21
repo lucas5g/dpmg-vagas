@@ -6,7 +6,11 @@
             "destination": "/docs/index.html"
         },
         {
-            "source": "/(.*)",
+            "source": "/docs/:match*",
+            "destination": "/docs/:match*"
+        },
+        {
+            "source": "/((?!docs$|docs/).*)",
             "destination": "/index.html"
         }
     ]
