@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Gemini CLI
-        run: npx -g @google/gemini-cli
+        run: npx @google/gemini-cli
 
       - name: Get diff
         run: |
