@@ -7,6 +7,7 @@
     "dev": "vite",
     "docs": "npx -y serve . -n -p 3333 -s docs.html",
     "build": "tsc -b && vite build",
+    "postbuild": "cp docs.html dist/ && cp README.md dist/ && cp -r docs dist/docs/",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "bun run api/src/index.ts"
