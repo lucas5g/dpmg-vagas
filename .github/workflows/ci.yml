@@ -1,67 +1,67 @@
-name: CI Pipeline
+# name: CI Pipeline
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    types: [opened, synchronize]
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     types: [opened, synchronize]
 
-jobs:
-  gemini-analysis:
-    runs-on: ubuntu-latest
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-    permissions:
-      contents: read
-      pull-requests: write
+# jobs:
+#   gemini-analysis:
+#     runs-on: ubuntu-latest
+#     env:
+#       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+#     permissions:
+#       contents: read
+#       pull-requests: write
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
 
-      - name: Get diff
-        run: |
-          # Define a base para comparação (PR ou commit anterior)
-          TARGET_BRANCH="${{ github.base_ref }}"
-          if [ -z "$TARGET_BRANCH" ]; then
-            BASE="HEAD~1"
-          else
-            git fetch origin $TARGET_BRANCH --depth=1
-            BASE="origin/$TARGET_BRANCH"
-          fi
-          git diff $BASE > diff.txt
+#       - name: Get diff
+#         run: |
+#           # Define a base para comparação (PR ou commit anterior)
+#           TARGET_BRANCH="${{ github.base_ref }}"
+#           if [ -z "$TARGET_BRANCH" ]; then
+#             BASE="HEAD~1"
+#           else
+#             git fetch origin $TARGET_BRANCH --depth=1
+#             BASE="origin/$TARGET_BRANCH"
+#           fi
+#           git diff $BASE > diff.txt
 
-      - name: Run Gemini Analysis
-        run: |
-          # Verifica se há conteúdo no diff.txt
-          if [ ! -s diff.txt ]; then
-            echo '{"risk": "LOW", "reason": "No changes to analyze", "suggestions": ""}' > result.json
-            exit 0
-          fi
+#       - name: Run Gemini Analysis
+#         run: |
+#           # Verifica se há conteúdo no diff.txt
+#           if [ ! -s diff.txt ]; then
+#             echo '{"risk": "LOW", "reason": "No changes to analyze", "suggestions": ""}' > result.json
+#             exit 0
+#           fi
 
-          npx -y @google/gemini-cli analyze \
-            --input diff.txt \
-            --prompt "
-            Você é um arquiteto backend sênior.
-            Analise o diff e classifique risco de breaking change:
-            LOW, MEDIUM ou HIGH.
+#           npx -y @google/gemini-cli analyze \
+#             --input diff.txt \
+#             --prompt "
+#             Você é um arquiteto backend sênior.
+#             Analise o diff e classifique risco de breaking change:
+#             LOW, MEDIUM ou HIGH.
 
-            Considere:
-            - Mudança de assinatura
-            - Remoção de métodos
-            - Alteração de DTO
-            - Mudança em schema
-            - Alteração em módulos críticos (auth, guards)
+#             Considere:
+#             - Mudança de assinatura
+#             - Remoção de métodos
+#             - Alteração de DTO
+#             - Mudança em schema
+#             - Alteração em módulos críticos (auth, guards)
 
-            Responda em JSON:
-            { risk: '', reason: '', suggestions: '' }
-            " > result.json
+#             Responda em JSON:
+#             { risk: '', reason: '', suggestions: '' }
+#             " > result.json
 
-      - name: Fail if HIGH
-        run: |
-          if grep -q '"risk": "HIGH"' result.json; then
-            echo "High risk detected"
-            exit 1
-          fi
+#       - name: Fail if HIGH
+#         run: |
+#           if grep -q '"risk": "HIGH"' result.json; then
+#             echo "High risk detected"
+#             exit 1
+#           fi
