@@ -21,17 +21,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Gemini CLI
-        run: npx @google/gemini-cli
-
       - name: Get diff
         run: |
-          git fetch origin ${{ github.base_ref }}
-          git diff origin/${{ github.base_ref }} > diff.txt
+          # Define a base para comparação (PR ou commit anterior)
+          TARGET_BRANCH="${{ github.base_ref }}"
+          if [ -z "$TARGET_BRANCH" ]; then
+            BASE="HEAD~1"
+          else
+            git fetch origin $TARGET_BRANCH --depth=1
+            BASE="origin/$TARGET_BRANCH"
+          fi
+          git diff $BASE > diff.txt
 
       - name: Run Gemini Analysis
         run: |
-          gemini analyze \
+          # Verifica se há conteúdo no diff.txt
+          if [ ! -s diff.txt ]; then
+            echo '{"risk": "LOW", "reason": "No changes to analyze", "suggestions": ""}' > result.json
+            exit 0
+          fi
+
+          npx -y @google/gemini-cli analyze \
             --input diff.txt \
             --prompt "
             Você é um arquiteto backend sênior.
