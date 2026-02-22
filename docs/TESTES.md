@@ -1,7 +1,5 @@
 # Testes Automatizados por IA
 
-<div align="justify">
-
 **Objetivo:** Após alterar o código, o desenvolvedor pode instruir o chat a gerar os testes automaticamente. À medida que o projeto cresce, essa automação garante a integridade do sistema ao criar ou corrigir funcionalidades, evitando regressões.
 
 ---
@@ -97,4 +95,3 @@ describe('API Candidaturas', () => {
 
 A criação de testes para cada nova funcionalidade torna a aplicação resiliente a mudanças futuras. Estes testes podem ser integrados ao fluxo de *pre-commit* ou executados automaticamente via pipeline de CI/CD.
 
-</div>

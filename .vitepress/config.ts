@@ -6,6 +6,9 @@ export default defineConfig({
     base: '/docs/',
     cleanUrls: true,
     srcDir: '.',
+    head: [
+        ['style', {}, '.vp-doc p, .vp-doc li { text-align: justify; }; ']
+    ],
     rewrites: {
         'README.md': 'index.md',
         'docs/:path*': ':path*'

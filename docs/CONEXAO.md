@@ -1,7 +1,5 @@
 # Conexão via MCP, IDE e Figma
 
-<div align="justify">
-
 **Objetivo:** Estabelecer a integração entre o Figma, a IDE e o Protocolo de Contexto de Modelo (MCP) para acelerar o desenvolvimento do frontend com base em layouts pré-definidos.
 
 ---
@@ -47,5 +45,3 @@ Com a conexão configurada, utiliza-se o chat da IDE para solicitar a implementa
 O processo automatiza a base do projeto, entregando uma estrutura funcional. Embora ajustes finos de UI possam ser necessários, a economia de tempo na criação do código estrutural é significativa, permitindo foco total em regras de negócio complexas.
 
 ![Demonstração do resultado gerado pela automação](images/3.gif)
-
-</div>
