@@ -3,6 +3,8 @@ import { cors } from '@elysiajs/cors';
 import { Database } from 'bun:sqlite';
 
 // Configurando conexão com o banco de dados (SQLite)
+// ⚠️ bun:sqlite só funciona localmente. Na Vercel, substitua por um banco externo
+// (ex: Turso, Vercel Postgres, PlanetScale, etc.)
 const db = new Database('vagas.sqlite', { create: true });
 
 // Setup inicial do banco de dados (se a tabela ainda não existir)
@@ -17,6 +19,7 @@ db.run(`
   )
 `);
 
+// App exportada SEM .listen() para funcionar como serverless na Vercel
 export const app = new Elysia({ prefix: '/api' })
     .use(cors()) // Habilitando CORS para o Frontend em React
     .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
@@ -67,7 +70,10 @@ export const app = new Elysia({ prefix: '/api' })
             console.error('Erro ao buscar candidaturas:', error);
             return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
         }
-    })
-    .listen(3000);
+    });
 
-console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
+// Dev server local — só roda quando executado diretamente com `bun run`
+if (typeof Bun !== 'undefined') {
+    app.listen(3000);
+    console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
+}

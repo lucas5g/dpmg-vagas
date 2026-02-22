@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "@elysiajs/cors": "^1.2.0",
+        "@elysiajs/node": "^1.4.5",
         "elysia": "^1.2.0"
     },
     "devDependencies": {

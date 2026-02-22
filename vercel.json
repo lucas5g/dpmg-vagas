@@ -1,6 +1,15 @@
 {
     "cleanUrls": true,
+    "functions": {
+        "api/index.ts": {
+            "runtime": "nodejs20.x"
+        }
+    },
     "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "/api"
+        },
         {
             "source": "/docs",
             "destination": "/docs/index.html"
@@ -10,7 +19,7 @@
             "destination": "/docs/:match*"
         },
         {
-            "source": "/((?!docs$|docs/).*)",
+            "source": "/((?!api|docs$|docs/).*)",
             "destination": "/index.html"
         }
     ]
