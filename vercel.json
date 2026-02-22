@@ -4,10 +4,6 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/api/(.*)",
-            "destination": "/api"
-        },
-        {
             "source": "/docs",
             "destination": "/docs/index.html"
         },

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'bun:test';
 
 import app from './index'
 
+
 const api = 'http://localhost/api/candidaturas';
 
 describe('API Candidaturas', () => {
