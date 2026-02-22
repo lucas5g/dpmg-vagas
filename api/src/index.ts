@@ -17,8 +17,9 @@ db.run(`
   )
 `);
 
-export const app = new Elysia()
+export const app = new Elysia({ prefix: '/api' })
     .use(cors()) // Habilitando CORS para o Frontend em React
+    .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
     .post(
         '/candidaturas',
         async ({ body, set }) => {
@@ -57,6 +58,16 @@ export const app = new Elysia()
             }),
         }
     )
+    .get('/candidaturas', () => {
+        try {
+            const stmt = db.prepare('SELECT * FROM candidaturas ORDER BY created_at DESC');
+            const candidaturas = stmt.all();
+            return { success: true, candidaturas };
+        } catch (error) {
+            console.error('Erro ao buscar candidaturas:', error);
+            return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
+        }
+    })
     .listen(3000);
 
-console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}`);
+console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
