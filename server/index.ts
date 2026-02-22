@@ -16,7 +16,7 @@ db.run(`
 `);
 
 // App exportada SEM .listen() para funcionar como serverless na Vercel
-export const app = new Elysia({ prefix: '/api' })
+const app = new Elysia({ prefix: '/api' })
     .use(cors()) // Habilitando CORS para o Frontend em React
     .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
     .post(
@@ -73,3 +73,5 @@ if (typeof Bun !== 'undefined') {
     app.listen(3000);
     console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
 }
+
+export default app;
