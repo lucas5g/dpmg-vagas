@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { Database } from 'bun:sqlite';
 
-const db = new Database('vagas.sqlite', { create: true });
+const db = new Database('/tmp/vagas.sqlite', { create: true });
 
 db.run(`
   CREATE TABLE IF NOT EXISTS candidaturas (
