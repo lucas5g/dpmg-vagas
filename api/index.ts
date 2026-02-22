@@ -15,8 +15,8 @@ db.run(`
   )
 `);
 
-// App exportada SEM .listen() para funcionar como serverless na Vercel
-const app = new Elysia({ prefix: '/api' })
+// Exportação direta sem variável intermediária — evita TDZ no Bun/Vercel
+export default new Elysia({ prefix: '/api' })
     .use(cors()) // Habilitando CORS para o Frontend em React
     .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
     .post(
@@ -67,11 +67,3 @@ const app = new Elysia({ prefix: '/api' })
             return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
         }
     });
-
-// Dev server local — só roda quando executado diretamente com `bun run`
-if (typeof Bun !== 'undefined' && process.env.NODE_ENV !== 'production') {
-    app.listen(3000);
-    console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
-}
-
-export default app;
