@@ -16,7 +16,7 @@ db.run(`
 `);
 
 // Exportação direta sem variável intermediária — evita TDZ no Bun/Vercel
-export default new Elysia({ prefix: '/api' })
+const app = new Elysia({ prefix: '/api' })
     .use(cors()) // Habilitando CORS para o Frontend em React
     .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
     .post(
@@ -67,3 +67,10 @@ export default new Elysia({ prefix: '/api' })
             return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
         }
     });
+
+export default app;
+
+if (typeof Bun !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    app.listen(3000);
+    console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
+}
