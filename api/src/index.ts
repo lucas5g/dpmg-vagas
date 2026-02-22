@@ -1,21 +1,21 @@
 import { Elysia, t } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import postgres from 'postgres';
+import { Database } from 'bun:sqlite';
 
-// Configurando conexão com o banco de dados
-const sql = postgres('postgres://postgres:postgresspassword@localhost:5433/dpmg_vagas');
+// Configurando conexão com o banco de dados (SQLite)
+const db = new Database('vagas.sqlite', { create: true });
 
 // Setup inicial do banco de dados (se a tabela ainda não existir)
-await sql`
+db.run(`
   CREATE TABLE IF NOT EXISTS candidaturas (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    job VARCHAR(255) NOT NULL,
-    salary VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    job TEXT NOT NULL,
+    salary TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
-`;
+`);
 
 export const app = new Elysia()
     .use(cors()) // Habilitando CORS para o Frontend em React
@@ -23,14 +23,25 @@ export const app = new Elysia()
         '/candidaturas',
         async ({ body, set }) => {
             try {
-                const result = await sql`
-          INSERT INTO candidaturas (name, email, job, salary)
-          VALUES (${body.name}, ${body.email}, ${body.job}, ${body.salary})
-          RETURNING *
-        `;
+                const stmt = db.prepare(`
+                    INSERT INTO candidaturas (name, email, job, salary)
+                    VALUES ($name, $email, $job, $salary)
+                    RETURNING *
+                `);
+
+                const result = stmt.get({
+                    $name: body.name,
+                    $email: body.email,
+                    $job: body.job,
+                    $salary: body.salary,
+                });
+
+                if (!result) {
+                    throw new Error('Falha ao inserir candidatura');
+                }
 
                 set.status = 201;
-                return { success: true, candidatura: result[0] };
+                return { success: true, candidatura: result };
             } catch (error) {
                 console.error('Erro ao salvar no banco:', error);
                 set.status = 500;

@@ -8,8 +8,7 @@
     },
     "dependencies": {
         "@elysiajs/cors": "^1.2.0",
-        "elysia": "^1.2.0",
-        "postgres": "^3.4.5"
+        "elysia": "^1.2.0"
     },
     "devDependencies": {
         "bun-types": "latest"
