@@ -69,7 +69,7 @@ const app = new Elysia({ prefix: '/api' })
     });
 
 // Dev server local — só roda quando executado diretamente com `bun run`
-if (typeof Bun !== 'undefined') {
+if (typeof Bun !== 'undefined' && process.env.NODE_ENV !== 'production') {
     app.listen(3000);
     console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
 }
