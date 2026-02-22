@@ -10,7 +10,7 @@
     "build": "tsc -b && vite build && npm run docs:build && mkdir -p dist/docs && cp -r .vitepress/dist/* dist/docs/",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "bun run api/src/index.ts"
+    "server": "bun run server/src/index.ts"
   },
   "dependencies": {
     "lucide-react": "^0.575.0",
