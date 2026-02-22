@@ -1,79 +1,95 @@
-import { Elysia, t } from 'elysia';
-import { cors } from '@elysiajs/cors';
-import { Database } from 'bun:sqlite';
+// Use "type: module" in package.json to use ES modules
+import express from 'express';
+const app = express();
+const port = 3000;
+ 
+// Define your routes
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello from Express on Vercel!' });
+});
+ 
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
+// For Node.js, ensure "type": "module" in package.json
+// (Not required for Bun)
 
-// Configurando conexão com o banco de dados (SQLite)
-// ⚠️ bun:sqlite só funciona localmente. Na Vercel, substitua por um banco externo
-// (ex: Turso, Vercel Postgres, PlanetScale, etc.)
-const db = new Database('vagas.sqlite', { create: true });
+// import { Elysia, t } from 'elysia';
+// import { cors } from '@elysiajs/cors';
+// import { Database } from 'bun:sqlite';
 
-// Setup inicial do banco de dados (se a tabela ainda não existir)
-db.run(`
-  CREATE TABLE IF NOT EXISTS candidaturas (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    job TEXT NOT NULL,
-    salary TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
+// // Configurando conexão com o banco de dados (SQLite)
+// // ⚠️ bun:sqlite só funciona localmente. Na Vercel, substitua por um banco externo
+// // (ex: Turso, Vercel Postgres, PlanetScale, etc.)
+// const db = new Database('vagas.sqlite', { create: true });
 
-// App exportada SEM .listen() para funcionar como serverless na Vercel
-export const app = new Elysia({ prefix: '/api' })
-    .use(cors()) // Habilitando CORS para o Frontend em React
-    .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
-    .post(
-        '/candidaturas',
-        async ({ body, set }) => {
-            try {
-                const stmt = db.prepare(`
-                    INSERT INTO candidaturas (name, email, job, salary)
-                    VALUES ($name, $email, $job, $salary)
-                    RETURNING *
-                `);
+// // Setup inicial do banco de dados (se a tabela ainda não existir)
+// db.run(`
+//   CREATE TABLE IF NOT EXISTS candidaturas (
+//     id INTEGER PRIMARY KEY AUTOINCREMENT,
+//     name TEXT NOT NULL,
+//     email TEXT NOT NULL,
+//     job TEXT NOT NULL,
+//     salary TEXT NOT NULL,
+//     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+//   )
+// `);
 
-                const result = stmt.get({
-                    $name: body.name,
-                    $email: body.email,
-                    $job: body.job,
-                    $salary: body.salary,
-                });
+// // App exportada SEM .listen() para funcionar como serverless na Vercel
+// export const app = new Elysia({ prefix: '/api' })
+//     .use(cors()) // Habilitando CORS para o Frontend em React
+//     .get('/', () => ({ message: 'API de Candidaturas - DPMG Vagas' }))
+//     .post(
+//         '/candidaturas',
+//         async ({ body, set }) => {
+//             try {
+//                 const stmt = db.prepare(`
+//                     INSERT INTO candidaturas (name, email, job, salary)
+//                     VALUES ($name, $email, $job, $salary)
+//                     RETURNING *
+//                 `);
 
-                if (!result) {
-                    throw new Error('Falha ao inserir candidatura');
-                }
+//                 const result = stmt.get({
+//                     $name: body.name,
+//                     $email: body.email,
+//                     $job: body.job,
+//                     $salary: body.salary,
+//                 });
 
-                set.status = 201;
-                return { success: true, candidatura: result };
-            } catch (error) {
-                console.error('Erro ao salvar no banco:', error);
-                set.status = 500;
-                return { success: false, error: 'Erro ao salvar a candidatura no banco de dados' };
-            }
-        },
-        {
-            body: t.Object({
-                name: t.String(),
-                email: t.String(),
-                job: t.String(),
-                salary: t.String(),
-            }),
-        }
-    )
-    .get('/candidaturas', () => {
-        try {
-            const stmt = db.prepare('SELECT * FROM candidaturas ORDER BY created_at DESC');
-            const candidaturas = stmt.all();
-            return { success: true, candidaturas };
-        } catch (error) {
-            console.error('Erro ao buscar candidaturas:', error);
-            return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
-        }
-    });
+//                 if (!result) {
+//                     throw new Error('Falha ao inserir candidatura');
+//                 }
 
-// Dev server local — só roda quando executado diretamente com `bun run`
-if (typeof Bun !== 'undefined') {
-    app.listen(3000);
-    console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
-}
+//                 set.status = 201;
+//                 return { success: true, candidatura: result };
+//             } catch (error) {
+//                 console.error('Erro ao salvar no banco:', error);
+//                 set.status = 500;
+//                 return { success: false, error: 'Erro ao salvar a candidatura no banco de dados' };
+//             }
+//         },
+//         {
+//             body: t.Object({
+//                 name: t.String(),
+//                 email: t.String(),
+//                 job: t.String(),
+//                 salary: t.String(),
+//             }),
+//         }
+//     )
+//     .get('/candidaturas', () => {
+//         try {
+//             const stmt = db.prepare('SELECT * FROM candidaturas ORDER BY created_at DESC');
+//             const candidaturas = stmt.all();
+//             return { success: true, candidaturas };
+//         } catch (error) {
+//             console.error('Erro ao buscar candidaturas:', error);
+//             return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
+//         }
+//     });
+
+// // Dev server local — só roda quando executado diretamente com `bun run`
+// if (typeof Bun !== 'undefined') {
+//     app.listen(3000);
+//     console.log(`🦊 Elysia backend rodando em http://${app.server?.hostname}:${app.server?.port}/api`);
+// }
