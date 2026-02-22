@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'bun:test';
 import { app } from './index';
 
+const api = 'http://localhost/api/candidaturas';
+
 describe('API Candidaturas', () => {
     it('deve criar uma nova candidatura com sucesso', async () => {
         const payload = {
@@ -10,7 +12,7 @@ describe('API Candidaturas', () => {
             salary: '8000'
         };
 
-        const req = new Request('http://localhost/candidaturas', {
+        const req = new Request(api, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,7 +34,7 @@ describe('API Candidaturas', () => {
     });
 
     it('deve falhar ao enviar um payload incompleto', async () => {
-        const req = new Request('http://localhost/candidaturas', {
+        const req = new Request(api, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
