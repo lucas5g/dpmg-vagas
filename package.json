@@ -10,7 +10,7 @@
     "build": "tsc -b && vite build && npm run docs:build && mkdir -p dist/docs && cp -r .vitepress/dist/* dist/docs/",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "bun run api/index.ts"
+    "server": "bun --watch api/index.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.1",

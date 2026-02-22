@@ -59,9 +59,8 @@ const app = new Elysia({ prefix: '/api' })
     )
     .get('/candidaturas', () => {
         try {
-            const stmt = db.prepare('SELECT * FROM candidaturas ORDER BY created_at DESC');
-            const candidaturas = stmt.all();
-            return { success: true, candidaturas };
+           const res = db.prepare('SELECT * FROM candidaturas ORDER BY created_at DESC');
+           return res.all();
         } catch (error) {
             console.error('Erro ao buscar candidaturas:', error);
             return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
