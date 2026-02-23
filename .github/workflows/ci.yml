@@ -1,67 +1,64 @@
-# name: CI Pipeline
+name: CI Pipeline - Diff Analysis
 
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     types: [opened, synchronize]
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types: [opened, synchronize]
 
-# jobs:
-#   gemini-analysis:
-#     runs-on: ubuntu-latest
-#     env:
-#       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-#     permissions:
-#       contents: read
-#       pull-requests: write
+jobs:
+  diff-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-#       - name: Get diff
-#         run: |
-#           # Define a base para comparação (PR ou commit anterior)
-#           TARGET_BRANCH="${{ github.base_ref }}"
-#           if [ -z "$TARGET_BRANCH" ]; then
-#             BASE="HEAD~1"
-#           else
-#             git fetch origin $TARGET_BRANCH --depth=1
-#             BASE="origin/$TARGET_BRANCH"
-#           fi
-#           git diff $BASE > diff.txt
+      - name: Get diff
+        run: |
+          # Define a base para comparação (PR ou commit anterior)
+          TARGET_BRANCH="${{ github.base_ref }}"
+          if [ -z "$TARGET_BRANCH" ]; then
+            BASE="HEAD~1"
+          else
+            git fetch origin $TARGET_BRANCH --depth=1
+            BASE="origin/$TARGET_BRANCH"
+          fi
+          git diff $BASE > diff.txt
 
-#       - name: Run Gemini Analysis
-#         run: |
-#           # Verifica se há conteúdo no diff.txt
-#           if [ ! -s diff.txt ]; then
-#             echo '{"risk": "LOW", "reason": "No changes to analyze", "suggestions": ""}' > result.json
-#             exit 0
-#           fi
+      - name: Analyze diff via n8n
+        run: |
+          # Verifica se há conteúdo no diff.txt
+          if [ ! -s diff.txt ]; then
+            echo '{"risk": "LOW", "reason": "No changes to analyze", "suggestions": ""}' > result.json
+            echo "No changes detected, skipping analysis"
+            exit 0
+          fi
 
-#           npx -y @google/gemini-cli analyze \
-#             --input diff.txt \
-#             --prompt "
-#             Você é um arquiteto backend sênior.
-#             Analise o diff e classifique risco de breaking change:
-#             LOW, MEDIUM ou HIGH.
+          echo "Sending diff to n8n for AI analysis..."
+          RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: text/plain" \
+            --data-binary @diff.txt \
+            "${{ secrets.N8N_WEBHOOK_URL }}")
 
-#             Considere:
-#             - Mudança de assinatura
-#             - Remoção de métodos
-#             - Alteração de DTO
-#             - Mudança em schema
-#             - Alteração em módulos críticos (auth, guards)
+          echo "$RESPONSE" > result.json
+          echo "Analysis result:"
+          cat result.json | python3 -m json.tool 2>/dev/null || cat result.json
 
-#             Responda em JSON:
-#             { risk: '', reason: '', suggestions: '' }
-#             " > result.json
+      - name: Fail if HIGH risk
+        run: |
+          RISK=$(python3 -c "import json; print(json.load(open('result.json')).get('risk','UNKNOWN'))" 2>/dev/null || echo "UNKNOWN")
+          echo "Risk level: $RISK"
 
-#       - name: Fail if HIGH
-#         run: |
-#           if grep -q '"risk": "HIGH"' result.json; then
-#             echo "High risk detected"
-#             exit 1
-#           fi
+          if [ "$RISK" = "HIGH" ]; then
+            echo "::error::🚨 HIGH risk breaking change detected!"
+            python3 -c "import json; d=json.load(open('result.json')); print(f'Reason: {d.get(\"reason\",\"N/A\")}'); print(f'Suggestions: {d.get(\"suggestions\",\"N/A\")}')" 2>/dev/null
+            exit 1
+          fi
+
+          echo "✅ Risk level acceptable: $RISK"
