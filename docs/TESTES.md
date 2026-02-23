@@ -32,13 +32,13 @@ O primeiro passo consiste em desenvolver a lógica de negócio. No exemplo abaix
 
 ### 2. Geração dos Testes via Prompt
 
-Para criar os testes unitários, basta solicitar ao agente de IA através do chat. O comando deve ser claro, indicando qual arquivo ou trecho de código deve ser testado.
+Para criar os testes unitários, basta solicitar ao agente de IA através do chat. 
 
 ![Interface do chat enviando o comando de geração de testes](images/4.png)
 
 ### 3. Resultado: Criação do Arquivo `index.test.ts`
 
-Com base no código fornecido, o agente gera automaticamente a suíte de testes correspondente, cobrindo casos de sucesso e cenários de erro (e.g., payload incompleto).
+Com base no código fornecido, o agente gera automaticamente a suíte de testes correspondente, cobrindo casos de sucesso e cenários de erro (ex: payload incompleto).
 
 ```ts
 import { describe, it, expect } from 'bun:test';

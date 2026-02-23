@@ -1,6 +1,5 @@
-# Conexão via MCP, IDE e Figma
-
-**Objetivo:** Estabelecer a integração entre o Figma, a IDE e o Protocolo de Contexto de Modelo (MCP) para acelerar o desenvolvimento do frontend com base em layouts pré-definidos.
+# Integração IDE e Figma
+**Objetivo:** Realizar integração entre IDE e o Figma para acelerar o desenvolvimento do frontend com base em layouts pré-definidos, utilizando MCP (Model Context Protocol).
 
 ---
 

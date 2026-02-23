@@ -32,9 +32,10 @@ export default defineConfig({
                 // text: 'Guias',
                 items: [
                     { text: 'Início', link: '/' },
-                    { text: 'Conexão via MCP, IDE e Figma', link: '/CONEXAO' },
+                    { text: 'Integração IDE e Figma', link: '/CONEXAO' },
                     { text: 'Testes Automatizados por IA', link: '/TESTES' },
-                    { text: 'IA/CI/CD', link: '/IACICD' }
+                    { text: 'IA/CI/CD', link: '/IACICD' },
+                    { text: 'Dados Internos e IA', link: '/RAG' }
                 ]
             }
         ]

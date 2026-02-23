@@ -1,0 +1,1 @@
+# Dados Internos e IA
