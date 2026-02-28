@@ -4,6 +4,13 @@
     "version": 2,
     "cleanUrls": true,
     "trailingSlash": false,
+    "redirects": [
+        {
+            "source": "/docs/docs/:match*",
+            "destination": "/docs/:match*",
+            "permanent": true
+        }
+    ],
     "rewrites": [
         {
             "source": "/api/:path*",
@@ -15,10 +22,6 @@
         },
         {
             "source": "/docs/:match*",
-            "destination": "/docs/:match*"
-        },
-        {
-            "source": "/docs/docs/:match*",
             "destination": "/docs/:match*"
         },
         {
