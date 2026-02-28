@@ -2,6 +2,8 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "bunVersion": "1.x",
     "version": 2,
+    "cleanUrls": true,
+    "trailingSlash": false,
     "rewrites": [
         {
             "source": "/api/:path*",
