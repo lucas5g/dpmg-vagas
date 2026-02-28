@@ -18,6 +18,10 @@
             "destination": "/docs/:match*"
         },
         {
+            "source": "/docs/docs/:match*",
+            "destination": "/docs/:match*"
+        },
+        {
             "source": "/((?!api|docs$|docs/).*)",
             "destination": "/index.html"
         }
