@@ -33,6 +33,9 @@ await sql`
   )
 `;
 
+let test = 'lucas'
+console.log(test)
+
 // Exportação direta sem variável intermediária — evita TDZ no Bun/Vercel
 const app = new Elysia({ prefix: '/api' })
     .use(cors()) // Habilitando CORS para o Frontend em React
