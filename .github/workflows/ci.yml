@@ -55,8 +55,8 @@ jobs:
           RAZAO=$(python3 -c "import json; print(json.load(open('result.json')).get('razao','N/A'))" 2>/dev/null || echo "N/A")
           SUGESTAO=$(python3 -c "import json; print(json.load(open('result.json')).get('sugestao','N/A'))" 2>/dev/null || echo "N/A")
           
-          # Formata a mensagem
-          MESSAGE="**Análise de Código:** Risco: ${RISK^^} | Razão: $RAZAO | Sugestão: $SUGESTAO"
+          # Formata a mensagem com tags HTML para o Teams
+          MESSAGE="<h3>Análise de Código N8N</h3><ul><li><b>Risco:</b> ${RISK^^}</li><li><b>Razão:</b> $RAZAO</li><li><b>Sugestão:</b> $SUGESTAO</li></ul>"
           # Gera o payload JSON escapando corretamente aspas e quebras de linha
           JSON_PAYLOAD=$(python3 -c "import json, sys; print(json.dumps({'message': sys.argv[1]}))" "$MESSAGE")
           
