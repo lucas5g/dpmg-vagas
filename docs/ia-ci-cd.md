@@ -58,3 +58,7 @@ O grande diferencial desta automação é a sua capacidade de auditar e interrom
 Se o algoritmo de IA classificar as alterações como **alto risco** (`alto`), a *action* emite um erro crítico (`exit 1`) detalhando a justificativa e a sugestão dada pela IA. Isso previne que vulnerabilidades, exposição de dados sensíveis ou más práticas cheguem ao ambiente de produção.
 
 <!-- ![Pipeline quebrando após detecção de risco alto](images/placeholder-github-failed.png) -->
+
+## 5. Conclusão
+
+Essa arquitetura garante entregas mais seguras de forma automatizada. Ao delegar à IA a primeira camada de revisão de código, focada em segurança e boas práticas, reduzimos significativamente o esforço humano na detecção de vulnerabilidades comuns e evitamos que problemas críticos cheguem à branch principal do projeto.

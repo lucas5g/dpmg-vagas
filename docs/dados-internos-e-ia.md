@@ -23,3 +23,7 @@ Para interagir com a IA e consultar os dados internos:
 Nesta tela, basta a equipe digitar a dúvida, e o agente buscará os dados diretamente do sistema principal.
 
 ![Interface de Chat do n8n para Consulta de Dados](images/6.png)
+
+## Conclusão
+
+A implementação deste agente fornece autonomia à equipe, permitindo consultas dinâmicas aos dados do sistema através de linguagem natural. Isso agiliza tarefas que antes dependeriam da extração de relatórios complexos ou de buscas manuais no banco de dados.
