@@ -49,7 +49,7 @@ Abaixo um exemplo de como é estruturada a notificação usando as respostas da 
 
 Essa integração garante um ciclo de *feedback* rápido para os desenvolvedores que enviaram o código.
 
-![Notificação avaliando o código no Microsoft Teams](images/placeholder-teams.png)
+![Notificação avaliando o código no Microsoft Teams](images/teams.png)
 
 ## 4. Bloqueio Preventivo (Gatekeeper)
 
