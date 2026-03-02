@@ -1,19 +1,37 @@
 import { Elysia, t } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import { Database } from 'bun:sqlite';
+import postgres from 'postgres';
 
-const db = new Database('/tmp/vagas.sqlite', { create: true });
+const dbUrl = new URL(process.env.DATABASE_URL!);
+const schemaName = dbUrl.searchParams.get('schema') || 'public';
+dbUrl.searchParams.delete('schema');
 
-db.run(`
+// postgres.js não reconhece '?schema=', mas o Postgres aceita '?search_path=' em conexões
+if (schemaName !== 'public') {
+    dbUrl.searchParams.set('search_path', `"${schemaName}"`);
+}
+
+const sql = postgres(dbUrl.toString(), {
+    onnotice: () => { }, // Ignora os logs de "NOTICE" do PostgreSQL (ex: schema already exists)
+});
+
+// Setup inicial do banco de dados
+// Garante o schema (útil caso a string de conexão contenha schemas customizados de painéis)
+if (schemaName !== 'public') {
+    await sql.unsafe(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`);
+}
+
+// Criar tabela
+await sql`
   CREATE TABLE IF NOT EXISTS candidaturas (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     job TEXT NOT NULL,
     salary TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
-`);
+`;
 
 // Exportação direta sem variável intermediária — evita TDZ no Bun/Vercel
 const app = new Elysia({ prefix: '/api' })
@@ -23,25 +41,18 @@ const app = new Elysia({ prefix: '/api' })
         '/candidaturas',
         async ({ body, set }) => {
             try {
-                const stmt = db.prepare(`
+                const result = await sql`
                     INSERT INTO candidaturas (name, email, job, salary)
-                    VALUES ($name, $email, $job, $salary)
+                    VALUES (${body.name}, ${body.email}, ${body.job}, ${body.salary})
                     RETURNING *
-                `);
+                `;
 
-                const result = stmt.get({
-                    $name: body.name,
-                    $email: body.email,
-                    $job: body.job,
-                    $salary: body.salary,
-                });
-
-                if (!result) {
+                if (!result || result.length === 0) {
                     throw new Error('Falha ao inserir candidatura');
                 }
 
                 set.status = 201;
-                return { success: true, candidatura: result };
+                return { success: true, candidatura: result[0] };
             } catch (error) {
                 console.error('Erro ao salvar no banco:', error);
                 set.status = 500;
@@ -57,10 +68,10 @@ const app = new Elysia({ prefix: '/api' })
             }),
         }
     )
-    .get('/candidaturas', () => {
+    .get('/candidaturas', async () => {
         try {
-           const res = db.prepare('SELECT * FROM candidaturas ORDER BY created_at DESC');
-           return res.all();
+            const res = await sql`SELECT * FROM candidaturas ORDER BY created_at DESC`;
+            return res;
         } catch (error) {
             console.error('Erro ao buscar candidaturas:', error);
             return { success: false, error: 'Erro ao buscar candidaturas no banco de dados' };
