@@ -35,15 +35,14 @@ jobs:
         run: |
           # Verifica se há conteúdo no content.diff
           if [ ! -s content.diff ]; then
-            echo '{"risco": "baixo", "razao": "Nenhuma alteração para analisar", "sugestoes": ""}' > result.json
+            echo '{"risco": "baixo", "razao": "Nenhuma alteração para analisar", "sugestao": ""}' > result.json
             echo "Nenhuma alteração detectada, pulando análise"
             exit 0
           fi
 
           echo "Enviando diff para análise via n8n..."
           RESPONSE=$(curl -s -X POST \
-            -H "Content-Type: text/plain" \
-            --data-binary @content.diff \
+            -F "data=@content.diff" \
             "${{ secrets.N8N_WEBHOOK_URL }}")
 
           echo "$RESPONSE" > result.json
@@ -52,12 +51,12 @@ jobs:
 
       - name: Fail if HIGH risk
         run: |
-          RISK=$(python3 -c "import json; print(json.load(open('result.json')).get('risk','UNKNOWN'))" 2>/dev/null || echo "UNKNOWN")
+          RISK=$(python3 -c "import json; print(json.load(open('result.json')).get('risco','UNKNOWN'))" 2>/dev/null || echo "UNKNOWN")
           echo "Risk level: $RISK"
 
           if [ "$RISK" = "alto" ]; then
             echo "::error::🚨 Alto risco de alteração detectada!"
-            python3 -c "import json; d=json.load(open('result.json')); print(f'Razão: {d.get(\"razao\",\"N/A\")}'); print(f'Sugestões: {d.get(\"sugestoes\",\"N/A\")}')" 2>/dev/null
+            python3 -c "import json; d=json.load(open('result.json')); print(f'Razão: {d.get(\"razao\",\"N/A\")}'); print(f'Sugestão: {d.get(\"sugestao\",\"N/A\")}')" 2>/dev/null
             exit 1
           fi
 
