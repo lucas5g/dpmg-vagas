@@ -59,4 +59,4 @@ O grande diferencial desta automação é a sua capacidade de auditar e interrom
 
 Se o algoritmo de IA classificar as alterações como **alto risco** (`alto`), a *action* emite um erro crítico (`exit 1`) detalhando a justificativa e a sugestão dada pela IA. Isso previne que vulnerabilidades, exposição de dados sensíveis ou más práticas cheguem ao ambiente de produção.
 
-![Pipeline quebrando após detecção de risco alto](images/placeholder-github-failed.png)
+<!-- ![Pipeline quebrando após detecção de risco alto](images/placeholder-github-failed.png) -->
