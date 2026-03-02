@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test';
 
-import app from './index'
+import app from './index.js'
 
 
 const api = 'http://localhost/api/candidaturas';
