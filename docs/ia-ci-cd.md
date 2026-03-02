@@ -1,3 +1,3 @@
 # IA/CI/CD
 
-**Objetivo:** Definir as diretrizes para Infraestrutura como Código (IaC) e Integração/Entrega Contínua (CI/CD).
+**Objetivo:** Utilizar IA para verificar se o código possui vulnerabilidades de segurança e se está de acordo com as boas práticas de desenvolvimento.

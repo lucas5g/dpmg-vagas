@@ -29,25 +29,25 @@ jobs:
             git fetch origin $TARGET_BRANCH --depth=1
             BASE="origin/$TARGET_BRANCH"
           fi
-          git diff $BASE > diff.txt
+          git diff $BASE > content.diff
 
       - name: Analyze diff via n8n
         run: |
-          # Verifica se há conteúdo no diff.txt
-          if [ ! -s diff.txt ]; then
-            echo '{"risk": "LOW", "reason": "No changes to analyze", "suggestions": ""}' > result.json
-            echo "No changes detected, skipping analysis"
+          # Verifica se há conteúdo no content.diff
+          if [ ! -s content.diff ]; then
+            echo '{"risco": "baixo", "razao": "Nenhuma alteração para analisar", "sugestoes": ""}' > result.json
+            echo "Nenhuma alteração detectada, pulando análise"
             exit 0
           fi
 
-          echo "Sending diff to n8n for AI analysis..."
+          echo "Enviando diff para análise via n8n..."
           RESPONSE=$(curl -s -X POST \
             -H "Content-Type: text/plain" \
-            --data-binary @diff.txt \
+            --data-binary @content.diff \
             "${{ secrets.N8N_WEBHOOK_URL }}")
 
           echo "$RESPONSE" > result.json
-          echo "Analysis result:"
+          echo "Resultado da análise:"
           cat result.json | python3 -m json.tool 2>/dev/null || cat result.json
 
       - name: Fail if HIGH risk
@@ -55,10 +55,10 @@ jobs:
           RISK=$(python3 -c "import json; print(json.load(open('result.json')).get('risk','UNKNOWN'))" 2>/dev/null || echo "UNKNOWN")
           echo "Risk level: $RISK"
 
-          if [ "$RISK" = "HIGH" ]; then
-            echo "::error::🚨 HIGH risk breaking change detected!"
-            python3 -c "import json; d=json.load(open('result.json')); print(f'Reason: {d.get(\"reason\",\"N/A\")}'); print(f'Suggestions: {d.get(\"suggestions\",\"N/A\")}')" 2>/dev/null
+          if [ "$RISK" = "alto" ]; then
+            echo "::error::🚨 Alto risco de alteração detectada!"
+            python3 -c "import json; d=json.load(open('result.json')); print(f'Razão: {d.get(\"razao\",\"N/A\")}'); print(f'Sugestões: {d.get(\"sugestoes\",\"N/A\")}')" 2>/dev/null
             exit 1
           fi
 
-          echo "✅ Risk level acceptable: $RISK"
+          echo "✅ Nível de risco aceitável: $RISK"
