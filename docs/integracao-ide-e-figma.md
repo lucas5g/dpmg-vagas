@@ -1,9 +1,7 @@
 # Integração IDE e Figma
 **Objetivo:** Realizar integração entre IDE e o Figma para acelerar o desenvolvimento do frontend com base em layouts pré-definidos, utilizando MCP (Model Context Protocol).
 
----
-
-### 1. Acesso ao Projeto no Figma
+## 1. Acesso ao Projeto no Figma
 
 O ponto de partida é a obtenção da URL de referência do design. O link abaixo direciona para o layout oficial que servirá de base para a implementação:
 
@@ -11,7 +9,7 @@ O ponto de partida é a obtenção da URL de referência do design. O link abaix
 
 ![Interface do Figma exibindo o design do projeto](images/1.png)
 
-### 2. Configuração do MCP no VSCode
+## 2. Configuração do MCP no VSCode
 
 Para que o agente de IA consiga interpretar os elementos do design, é necessário configurar o servidor do Figma MCP. Crie o arquivo `.vscode/mcp.json` e insira as configurações abaixo, substituindo `SUA_CHAVE_FIGMA` pela sua chave de API pessoal.
 
@@ -31,7 +29,7 @@ Para que o agente de IA consiga interpretar os elementos do design, é necessár
 }
 ```
 
-### 3. Implementação Automatizada via Prompt
+## 3. Implementação Automatizada via Prompt
 
 Com a conexão configurada, utiliza-se o chat da IDE para solicitar a implementação. O agente analisará os componentes do Figma e gerará a estrutura inicial de código.
 
@@ -39,7 +37,7 @@ Com a conexão configurada, utiliza-se o chat da IDE para solicitar a implementa
 
 **Nota sobre o desempenho:** Este passo pode levar cerca de 10 minutos, pois o modelo realiza a configuração de pacotes, estrutura o projeto e corrige eventuais erros de execução automaticamente.
 
-### 4. Validação e Resultado Final
+## 4. Validação e Resultado Final
 
 O processo automatiza a base do projeto, entregando uma estrutura funcional. Embora ajustes finos de UI possam ser necessários, a economia de tempo na criação do código estrutural é significativa, permitindo foco total em regras de negócio complexas.
 

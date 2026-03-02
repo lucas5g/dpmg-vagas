@@ -2,9 +2,8 @@
 
 **Objetivo:** Após alterar o código, o desenvolvedor pode instruir o chat a gerar os testes automaticamente. À medida que o projeto cresce, essa automação garante a integridade do sistema ao criar ou corrigir funcionalidades, evitando regressões.
 
----
 
-### 1. Implementação da Funcionalidade
+## 1. Implementação da Funcionalidade
 
 O primeiro passo consiste em desenvolver a lógica de negócio. No exemplo abaixo, temos uma rota para salvar candidaturas no banco de dados:
 
@@ -30,13 +29,13 @@ O primeiro passo consiste em desenvolver a lógica de negócio. No exemplo abaix
 )
 ```
 
-### 2. Geração dos Testes via Prompt
+## 2. Geração dos Testes via Prompt
 
 Para criar os testes unitários, basta solicitar ao agente de IA através do chat. 
 
 ![Interface do chat enviando o comando de geração de testes](images/4.png)
 
-### 3. Resultado: Criação do Arquivo `index.test.ts`
+## 3. Resultado: Criação do Arquivo `index.test.ts`
 
 Com base no código fornecido, o agente gera automaticamente a suíte de testes correspondente, cobrindo casos de sucesso e cenários de erro (ex: payload incompleto).
 
@@ -91,7 +90,7 @@ describe('API Candidaturas', () => {
 });
 ```
 
-### 4. Conclusão
+## 4. Conclusão
 
 A criação de testes para cada nova funcionalidade torna a aplicação resiliente a mudanças futuras. Estes testes podem ser integrados ao fluxo de *pre-commit* ou executados automaticamente via pipeline de CI/CD.
 
