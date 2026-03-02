@@ -1,4 +1,4 @@
-name: CI Pipeline - Diff Analysis
+name: Pipeline CI - Análise de Código
 
 on:
   push:
@@ -7,19 +7,20 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  diff-analysis:
+  analise-de-alteracoes:
+    name: Análise de Alterações
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
 
     steps:
-      - name: Checkout
+      - name: Checkout do Código
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get diff
+      - name: Obter alterações (diff)
         run: |
           # Define a base para comparação (PR ou commit anterior)
           TARGET_BRANCH="${{ github.base_ref }}"
@@ -31,7 +32,7 @@ jobs:
           fi
           git diff $BASE > content.diff
 
-      - name: Analyze diff via n8n
+      - name: Analisar alterações via n8n
         run: |
           # Verifica se há conteúdo no content.diff
           if [ ! -s content.diff ]; then
@@ -49,7 +50,7 @@ jobs:
           echo "Resultado da análise:"
           cat result.json | python3 -m json.tool 2>/dev/null || cat result.json
 
-      - name: Notify Teams and Fail if HIGH risk
+      - name: Notificar Teams e bloquear se risco ALTO
         run: |
           RISK=$(python3 -c "import json; print(json.load(open('result.json')).get('risco','UNKNOWN'))" 2>/dev/null || echo "UNKNOWN")
           RAZAO=$(python3 -c "import json; print(json.load(open('result.json')).get('razao','N/A'))" 2>/dev/null || echo "N/A")
