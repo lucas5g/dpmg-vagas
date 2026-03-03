@@ -20,6 +20,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Instalar dependências
+        run: bun install
+
+      - name: Executar testes
+        run: bun test
+
       - name: Obter alterações (diff)
         run: |
           # Define a base para comparação (PR ou commit anterior)
